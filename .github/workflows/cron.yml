@@ -42,6 +42,7 @@ jobs:
           LON: ${{ vars.LON }}
           METHOD: ${{ vars.METHOD }}
           HIJRI_ADJUST: ${{ vars.HIJRI_ADJUST }}
+          TUNE: ${{ vars.TUNE }}
           CHANNEL_HANDLE: ${{ vars.CHANNEL_HANDLE }}
           FORCE_TEST: ${{ inputs.test && '1' || '' }}
         run: python main.py

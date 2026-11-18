@@ -1,0 +1,23 @@
+# مساجد و حرم‌ها؛ query برای جست‌وجوی عکس در Wikimedia Commons (انگلیسی) است.
+PLACES = [
+    ("حرم امام رضا (ع)، مشهد", "Imam Reza shrine Mashhad"),
+    ("مسجد نصیرالملک، شیراز", "Nasir al-Mulk Mosque"),
+    ("حرم حضرت معصومه (س)، قم", "Fatima Masumeh Shrine Qom"),
+    ("مسجد امام، اصفهان", "Shah Mosque Isfahan"),
+    ("حرم شاه‌چراغ، شیراز", "Shah Cheragh Shiraz"),
+    ("مسجد گوهرشاد، مشهد", "Goharshad Mosque"),
+    ("مسجد شیخ‌لطف‌الله، اصفهان", "Sheikh Lotfollah Mosque"),
+    ("حرم امام حسین (ع)، کربلا", "Imam Husayn Shrine Karbala"),
+    ("مسجد وکیل، شیراز", "Vakil Mosque Shiraz"),
+    ("حرم امام علی (ع)، نجف", "Imam Ali Shrine Najaf"),
+    ("مسجد جامع یزد", "Jameh Mosque of Yazd"),
+    ("حرم کاظمین، بغداد", "Al-Kadhimiya Mosque"),
+    ("مسجد جمکران، قم", "Jamkaran Mosque"),
+    ("مسجد کبود، تبریز", "Blue Mosque Tabriz"),
+    ("حرم حضرت عبدالعظیم (ع)، ری", "Shah Abdol Azim Shrine"),
+    ("مسجد آقابزرگ، کاشان", "Agha Bozorg Mosque Kashan"),
+    ("حرم عسکریین (ع)، سامرا", "Al-Askari Shrine Samarra"),
+    ("مسجد جامع اصفهان", "Jameh Mosque of Isfahan"),
+    ("مسجدالنبی، مدینه", "Al-Masjid an-Nabawi"),
+    ("مسجدالحرام، مکه", "Masjid al-Haram Kaaba"),
+]

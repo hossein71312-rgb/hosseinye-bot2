@@ -1,4 +1,6 @@
+import io
 import os
+import time
 import requests
 
 API_BASE = os.getenv("RUBIKA_API_BASE", "https://botapi.rubika.ir/v3")
@@ -19,29 +21,46 @@ def _call(method: str, payload: dict):
 def send_text(chat_id: str, text: str):
     return _call("sendMessage", {"chat_id": chat_id, "text": text})
 
-def send_image(chat_id: str, image_path: str, caption: str):
-    # Rubika file upload is a two-step process: requestSendFile -> upload -> sendFile.
+def _shrink(image_path: str) -> bytes:
+    """عکس بزرگ را کوچک و فشرده می‌کند (آپلود سریع‌تر از سرور گیتاب)."""
+    try:
+        from PIL import Image
+        with Image.open(image_path) as img:
+            img = img.convert("RGB")
+            img.thumbnail((1280, 1280))
+            buf = io.BytesIO()
+            img.save(buf, "JPEG", quality=82, optimize=True)
+            return buf.getvalue()
+    except Exception as exc:
+        print(f"shrink skipped: {exc}")
+        with open(image_path, "rb") as f:
+            return f.read()
+
+def _upload(data: bytes, name: str) -> str:
     info = _call("requestSendFile", {"type": "Image"})
     upload_url = info.get("upload_url")
     if not upload_url:
         raise RubikaError(f"requestSendFile did not return upload_url: {info}")
-
-    with open(image_path, "rb") as image_file:
-        uploaded = requests.post(
-            upload_url,
-            files={"file": (os.path.basename(image_path), image_file, "image/jpeg")},
-            timeout=90,
-        )
+    uploaded = requests.post(upload_url, files={"file": (name, data, "image/jpeg")},
+                             timeout=(15, 120))
     uploaded.raise_for_status()
-    upload_body = uploaded.json()
-    data = upload_body.get("data", upload_body)
-    file_id = data.get("file_id")
+    body = uploaded.json()
+    file_id = body.get("data", body).get("file_id")
     if not file_id:
-        raise RubikaError(f"Image upload did not return file_id: {upload_body}")
+        raise RubikaError(f"Image upload did not return file_id: {body}")
+    return file_id
 
-    return _call("sendFile", {
-        "chat_id": chat_id,
-        "file_id": file_id,
-        "type": "Image",
-        "text": caption,
-    })
+def send_image(chat_id: str, image_path: str, caption: str):
+    data = _shrink(image_path)
+    print(f"uploading image: {len(data) // 1024} KB")
+    last = None
+    for attempt in range(3):          # تا ۳ بار تلاش مجدد
+        try:
+            file_id = _upload(data, "photo.jpg")
+            return _call("sendFile", {"chat_id": chat_id, "file_id": file_id,
+                                      "type": "Image", "text": caption})
+        except (requests.RequestException, RubikaError) as exc:
+            last = exc
+            print(f"upload attempt {attempt + 1} failed: {exc}")
+            time.sleep(3)
+    raise last

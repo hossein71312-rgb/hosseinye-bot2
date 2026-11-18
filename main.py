@@ -56,9 +56,7 @@ def fetch_photo(state):
                 credit = None
             if credit:
                 state["pi"] = (start + step + 1) % len(PLACES)
-                who = f'{credit["artist"]} | ' if credit["artist"] else ""
-                return {"path": path, "key": credit["key"],
-                        "line": f'📍 {title}\n📷 {who}{credit["license"]} | Wikimedia Commons'}
+                return {"path": path, "key": credit["key"], "line": f'📍 {title}'}
             os.unlink(path)
     return None
 

@@ -11,6 +11,7 @@ def settings():
         "city": os.getenv("CITY_NAME") or "تهران",
         "method": os.getenv("METHOD") or "7",      # ۷ = مؤسسهٔ ژئوفیزیک دانشگاه تهران
         "adjust": os.getenv("HIJRI_ADJUST") or "0",
+        "tune": os.getenv("TUNE") or "",   # اختیاری: تنظیم دقیقه‌ای، مثلاً 0,0,0,1,0,1,0,0,0
     }
 
 def get_day(day):
@@ -18,6 +19,8 @@ def get_day(day):
     url = f"https://api.aladhan.com/v1/timings/{day.strftime('%d-%m-%Y')}"
     params = {"latitude": s["lat"], "longitude": s["lon"], "method": s["method"],
               "timezonestring": "Asia/Tehran", "adjustment": s["adjust"]}
+    if s["tune"]:
+        params["tune"] = s["tune"]   # ترتیب: Imsak,Fajr,Sunrise,Dhuhr,Asr,Maghrib,Sunset,Isha,Midnight
     r = requests.get(url, params=params, timeout=30)
     r.raise_for_status()
     data = r.json()["data"]

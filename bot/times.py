@@ -6,9 +6,9 @@ HIJRI_MONTHS = ["", "محرم", "صفر", "ربیع‌الاول", "ربیع‌�
 
 def settings():
     return {
-        "lat": os.getenv("LAT") or "35.6892",
-        "lon": os.getenv("LON") or "51.3890",
-        "city": os.getenv("CITY_NAME") or "تهران",
+     "lat": os.getenv("LAT") or "38.0800",
+"lon": os.getenv("LON") or "46.2919",
+"city": os.getenv("CITY_NAME") or "تبریز",
         "method": os.getenv("METHOD") or "7",      # ۷ = مؤسسهٔ ژئوفیزیک دانشگاه تهران
         "adjust": os.getenv("HIJRI_ADJUST") or "0",
         "tune": os.getenv("TUNE") or "",   # اختیاری: تنظیم دقیقه‌ای، مثلاً 0,0,0,1,0,1,0,0,0

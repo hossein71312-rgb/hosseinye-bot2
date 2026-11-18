@@ -154,8 +154,12 @@ def run_test(now, info):
     state = {"published": []}
     day = now.date()
     post_card(state, "test:card", day, info["hijri"])
-    text = (f"🧪 تست ربات اذان\n🕐 ساعت {fa(now.strftime('%H:%M'))}\n"
-            f"{date_line(day, info['hijri'])}\n\nاگر این پست را می‌بینید، ربات درست کار می‌کند ✅")
+    tm = info["times"]
+    text = (f"🧪 تست ربات اذان — {settings()['city']}\n🕐 ساعت {fa(now.strftime('%H:%M'))}\n"
+            f"{date_line(day, info['hijri'])}\n\n"
+            f"اذان صبح: {fa(tm['Fajr'])}\nطلوع آفتاب: {fa(tm['Sunrise'])}\n"
+            f"اذان ظهر: {fa(tm['Dhuhr'])}\nاذان مغرب: {fa(tm['Maghrib'])}\n\n"
+            f"اگر این پست را می‌بینید، ربات درست کار می‌کند ✅")
     post(state, "test:post", text, fetch_photo(state))
 
 def main():

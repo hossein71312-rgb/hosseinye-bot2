@@ -146,6 +146,15 @@ def run(now, state, info):
             text = build()
         post(state, key, text, fetch_photo(state))
 
+def run_test(now, info):
+    """اجرای آزمایشی: فوراً کارت تاریخ و یک پست نمونه با عکس می‌فرستد (بدون ثبت در تاریخچه)."""
+    state = {"published": []}
+    day = now.date()
+    post_card(state, "test:card", day, info["hijri"])
+    text = (f"🧪 تست ربات اذان\n🕐 ساعت {fa(now.strftime('%H:%M'))}\n"
+            f"{date_line(day, info['hijri'])}\n\nاگر این پست را می‌بینید، ربات درست کار می‌کند ✅")
+    post(state, "test:post", text, fetch_photo(state))
+
 def main():
     now = now_tehran()
     state = load_state()
@@ -153,8 +162,15 @@ def main():
         info = get_day(now.date())
     except Exception as exc:
         print(f"timings API failed: {exc}")
+        raise SystemExit(1)   # خطای قرمز تا مشکل دیده شود
+    print(f"now={now:%Y-%m-%d %H:%M} times={info['times']} hijri={info['hijri']}")
+    if os.getenv("FORCE_TEST") == "1":
+        run_test(now, info)
         return
+    before = len(state["published"])
     run(now, state, info)
+    if len(state["published"]) == before:
+        print("Nothing due right now (this is normal between scheduled times).")
     save_state(state)
 
 if __name__ == "__main__":

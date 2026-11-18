@@ -64,10 +64,15 @@ def fetch_photo(state):
 
 def post(state, key, text, photo=None):
     try:
+        sent = False
         if photo:
-            send_image(CHAT_ID, photo["path"], f'{text}\n\n{photo["line"]}')
-            mark(state, photo["key"])
-        else:
+            try:
+                send_image(CHAT_ID, photo["path"], f'{text}\n\n{photo["line"]}')
+                mark(state, photo["key"])
+                sent = True
+            except Exception as exc:
+                print(f"image send failed, sending text only: {exc}")
+        if not sent:
             send_text(CHAT_ID, text)
     finally:
         if photo:
